@@ -4,9 +4,12 @@ public class AuthenticationResponse {
     private String token;
     private String message;
 
-    public AuthenticationResponse(String token, String message) {
+    private User user;
+
+    public AuthenticationResponse(String token, String message, User user) {
         this.token = token;
         this.message = message;
+        this.user = user;
     }
 
     public String getToken() {
@@ -15,5 +18,9 @@ public class AuthenticationResponse {
 
     public String getMessage() {
         return message;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

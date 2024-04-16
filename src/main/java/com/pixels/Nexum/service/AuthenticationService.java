@@ -2,6 +2,7 @@ package com.pixels.Nexum.service;
 
 
 import com.pixels.Nexum.model.AuthenticationResponse;
+import com.pixels.Nexum.model.Role;
 import com.pixels.Nexum.model.Token;
 import com.pixels.Nexum.model.User;
 import com.pixels.Nexum.repository.TokenRepository;
@@ -11,7 +12,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AuthenticationService {
@@ -40,16 +44,14 @@ public class AuthenticationService {
 
         // check if user already exist. if exist than authenticate the user
         if(repository.findByUsername(request.getUsername()).isPresent()) {
-            return new AuthenticationResponse(null, "User already exist");
+            return new AuthenticationResponse(null, "User already exist", null);
         }
 
         User user = new User();
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-
+        user.setPhotoUrl(request.getPhotoUrl());
         user.setRole(request.getRole());
 
         user = repository.save(user);
@@ -58,7 +60,7 @@ public class AuthenticationService {
 
         saveUserToken(jwt, user);
 
-        return new AuthenticationResponse(jwt, "User registration was successful");
+        return new AuthenticationResponse(jwt, "User registration was successful", user);
 
     }
 
@@ -76,9 +78,58 @@ public class AuthenticationService {
         revokeAllTokenByUser(user);
         saveUserToken(jwt, user);
 
-        return new AuthenticationResponse(jwt, "User login was successful");
+        User newUser = new User();
+        newUser.setUsername(user.getUsername());
+        newUser.setEmail(user.getEmail());
+        newUser.setRole(user.getRole());
+        newUser.setId(user.getId());
+        newUser.setPhotoUrl(user.getPhotoUrl());
+        newUser.setPhoneNumber(user.getPhoneNumber());
+
+
+        return new AuthenticationResponse(jwt, "User login was successful", newUser);
 
     }
+
+    public AuthenticationResponse google(User request) {
+        if(repository.findByUsername(request.getUsername()).isPresent()) {
+            Optional<User> user = repository.findByUsername(request.getUsername());
+            User newUser = new User();
+            newUser.setUsername(user.get().getUsername());
+            newUser.setEmail(user.get().getEmail());
+            newUser.setRole(Role.valueOf("USER"));
+            newUser.setId(user.get().getId());
+            newUser.setPhotoUrl(user.get().getPhotoUrl());
+            newUser.setPhoneNumber(user.get().getPhoneNumber());
+            String jwt = jwtService.generateToken(newUser);
+            saveUserToken(jwt, newUser);
+            return new AuthenticationResponse(jwt, "User already exist", newUser);
+        }
+
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPhotoUrl(request.getPhotoUrl());
+
+        String generatedPassword =
+                UUID.randomUUID().toString().substring(0, 8) +
+                        UUID.randomUUID().toString().substring(0, 8);
+
+        user.setPassword(passwordEncoder.encode(generatedPassword));
+
+
+        user.setRole(Role.valueOf("USER"));
+
+        user = repository.save(user);
+
+        String jwt = jwtService.generateToken(user);
+
+        saveUserToken(jwt, user);
+
+        return new AuthenticationResponse(jwt, "User registration was successful", user);
+
+    }
+
     private void revokeAllTokenByUser(User user) {
         List<Token> validTokens = tokenRepository.findAllTokensByUser(user.getId());
         if(validTokens.isEmpty()) {
@@ -97,5 +148,47 @@ public class AuthenticationService {
         token.setLoggedOut(false);
         token.setUser(user);
         tokenRepository.save(token);
+    }
+
+    public AuthenticationResponse logout(String token) {
+        Token tokenEntity = tokenRepository.findByToken(token).orElse(null);
+        if(tokenEntity == null) {
+            return new AuthenticationResponse(null, "Token not found", null);
+        }
+        tokenEntity.setLoggedOut(true);
+        tokenRepository.save(tokenEntity);
+        return new AuthenticationResponse(null, "User logout was successful", null);
+    }
+
+    public AuthenticationResponse update(Integer id, User request) {
+        User user = repository.findById(id).orElse(null);
+        if(user == null) {
+            return new AuthenticationResponse(null, "User not found", null);
+        }
+        User newUser = new User();
+        newUser.setEmail(request.getEmail());
+        newUser.setUsername(request.getUsername());
+        newUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        newUser.setPhoneNumber(request.getPhoneNumber());
+        newUser.setPhotoUrl(request.getPhotoUrl());
+        newUser.setId(id);
+        newUser.setRole(Role.valueOf("USER"));
+        newUser = repository.save(newUser);
+        String jwt = jwtService.generateToken(newUser);
+        saveUserToken(jwt, newUser);
+        return new AuthenticationResponse(jwt, "User update was successful", newUser);
+    }
+
+    public AuthenticationResponse delete(Integer id) {
+        User user = repository.findById(id).orElse(null);
+        if(user == null) {
+            return new AuthenticationResponse(null, "User not found", null);
+        }
+        Token tokens = tokenRepository.findById(id).orElse(null);
+        if(tokens != null) {
+            tokenRepository.delete(tokens);
+        }
+        repository.delete(user);
+        return new AuthenticationResponse(null, "User delete was successful", null);
     }
 }

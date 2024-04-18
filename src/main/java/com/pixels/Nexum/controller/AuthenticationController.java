@@ -54,10 +54,4 @@ public class AuthenticationController {
         return ResponseEntity.ok(authService.update(id, request));
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<AuthenticationResponse> delete(
-            @PathVariable("id") Integer id
-    ) {
-        return ResponseEntity.ok(authService.delete(id));
-    }
 }

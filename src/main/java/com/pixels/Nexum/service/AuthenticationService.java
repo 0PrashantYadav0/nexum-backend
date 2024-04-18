@@ -151,12 +151,12 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse logout(String token) {
-        Token tokenEntity = tokenRepository.findByToken(token).orElse(null);
-        if(tokenEntity == null) {
+        Token tokens = tokenRepository.findByToken(token).orElse(null);
+        if(tokens == null) {
             return new AuthenticationResponse(null, "Token not found", null);
         }
-        tokenEntity.setLoggedOut(true);
-        tokenRepository.save(tokenEntity);
+        tokens.setLoggedOut(true);
+        tokenRepository.save(tokens);
         return new AuthenticationResponse(null, "User logout was successful", null);
     }
 
@@ -177,18 +177,5 @@ public class AuthenticationService {
         String jwt = jwtService.generateToken(newUser);
         saveUserToken(jwt, newUser);
         return new AuthenticationResponse(jwt, "User update was successful", newUser);
-    }
-
-    public AuthenticationResponse delete(Integer id) {
-        User user = repository.findById(id).orElse(null);
-        if(user == null) {
-            return new AuthenticationResponse(null, "User not found", null);
-        }
-        Token tokens = tokenRepository.findById(id).orElse(null);
-        if(tokens != null) {
-            tokenRepository.delete(tokens);
-        }
-        repository.delete(user);
-        return new AuthenticationResponse(null, "User delete was successful", null);
     }
 }

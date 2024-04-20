@@ -97,7 +97,7 @@ public class AuthenticationService {
             User newUser = new User();
             newUser.setUsername(user.get().getUsername());
             newUser.setEmail(user.get().getEmail());
-            newUser.setRole(Role.valueOf("USER"));
+            newUser.setRole(user.get().getRole());
             newUser.setId(user.get().getId());
             newUser.setPhotoUrl(user.get().getPhotoUrl());
             newUser.setPhoneNumber(user.get().getPhoneNumber());
@@ -118,7 +118,7 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(generatedPassword));
 
 
-        user.setRole(Role.valueOf("USER"));
+        user.setRole(request.getRole());
 
         user = repository.save(user);
 
@@ -128,6 +128,10 @@ public class AuthenticationService {
 
         return new AuthenticationResponse(jwt, "User registration was successful", user);
 
+    }
+
+    public User getUser(Integer id) {
+        return repository.findById(id).orElse(null);
     }
 
     private void revokeAllTokenByUser(User user) {

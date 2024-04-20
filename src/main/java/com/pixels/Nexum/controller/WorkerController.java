@@ -83,7 +83,6 @@ public class WorkerController {
             apiReturnModel.setMessage("User Created Successfully !");
             apiReturnModel.setCount(workerVec.size());
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             apiReturnModel.setStatus("fail");
             apiReturnModel.setMessage("Something went Wrong !!");
@@ -107,7 +106,6 @@ public class WorkerController {
             apiReturnModel.setMessage("User Updated Successfully !");
             apiReturnModel.setCount(workerVec.size());
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             apiReturnModel.setStatus("fail");
             apiReturnModel.setMessage("Something went Wrong !!");
@@ -131,7 +129,30 @@ public class WorkerController {
             apiReturnModel.setMessage("User Deleted Successfully !");
             apiReturnModel.setCount(workerVec.size());
         } catch (Exception e) {
-            // TODO Auto-generated catch block
+            e.printStackTrace();
+            apiReturnModel.setStatus("fail");
+            apiReturnModel.setMessage("Something went Wrong !!");
+            apiReturnModel.setCount(0);
+        }
+
+        return ResponseEntity.ok(apiReturnModel);
+    }
+
+
+    @GetMapping("getHeroWorker")
+    public ResponseEntity<?> getHeroWorker(){
+        apiReturnModel = new APIReturnModel();
+        workerVec = new Vector<>();
+
+        try {
+            WorkerModel worker = this.workerService.getHeroWorker();
+            workerVec.add(worker);
+            apiReturnModel.setData(workerVec);
+            apiReturnModel.setStatus("Success");
+            apiReturnModel.setStatusCode(200);
+            apiReturnModel.setMessage("User Found Successfully !");
+            apiReturnModel.setCount(workerVec.size());
+        } catch (Exception e) {
             e.printStackTrace();
             apiReturnModel.setStatus("fail");
             apiReturnModel.setMessage("Something went Wrong !!");

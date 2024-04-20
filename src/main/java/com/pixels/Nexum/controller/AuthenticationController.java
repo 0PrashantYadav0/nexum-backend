@@ -54,4 +54,11 @@ public class AuthenticationController {
         return ResponseEntity.ok(authService.update(id, request));
     }
 
+    @GetMapping("getUser/{id}")
+    public ResponseEntity<User> getUser(
+            @PathVariable("id") Integer id
+    ) {
+        return ResponseEntity.ok(authService.getUser(id));
+    }
+
 }

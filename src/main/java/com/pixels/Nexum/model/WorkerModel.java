@@ -19,7 +19,7 @@ import java.util.Optional;
 @Table(name = "Workers")
 public class WorkerModel {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+//    @GeneratedValue(strategy= GenerationType.AUTO)
     private int userId;
 
     @Column(unique= true, nullable=false,updatable = false)
@@ -30,10 +30,10 @@ public class WorkerModel {
 
     private String middleName;
 
+    @Column(nullable=false, updatable=false)
     private String lastName;
 
-    private String password;
-
+    @Column(nullable=false)
     private String email;
 
     @Column(unique= true, nullable= false)
@@ -57,10 +57,9 @@ public class WorkerModel {
     @Column(nullable = false)
     private String skills;
 
-    private String rating;
-
     private String experience;
 
+    private String about;
     private String photoUrl;
 
     @CreationTimestamp
@@ -76,6 +75,7 @@ public class WorkerModel {
     private int modifiedBy;
 
     private int createdBy;
+
     private boolean status = true;
 
 }

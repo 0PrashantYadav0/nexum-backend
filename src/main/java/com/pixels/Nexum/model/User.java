@@ -37,7 +37,8 @@ public class User implements UserDetails {
     @Column(name = "photo_url")
     private String photoUrl;
 
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private Role role;
 
     @Column(name = "phone_number")

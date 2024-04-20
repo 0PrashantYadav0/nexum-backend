@@ -16,4 +16,6 @@ public interface WorkerService{
 
     WorkerModel deleteUser(int userId);
 
+    WorkerModel getHeroWorker();
+
 }

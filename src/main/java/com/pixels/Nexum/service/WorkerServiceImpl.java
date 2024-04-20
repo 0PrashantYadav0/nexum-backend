@@ -5,6 +5,7 @@ import com.pixels.Nexum.repository.WorkersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Vector;
 
 @Service
@@ -37,5 +38,10 @@ public class WorkerServiceImpl implements WorkerService{
         WorkerModel workerModel = this.workersRepository.findById(userId).orElse(null);
         this.workersRepository.delete(workerModel);
         return workerModel;
+    }
+
+    @Override
+    public WorkerModel getHeroWorker() {
+        return null;
     }
 }

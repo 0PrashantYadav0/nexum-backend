@@ -46,6 +46,7 @@ public class MessageController {
             apiReturnModel.setStatusCode(404);
             apiReturnModel.setMessage("Something went Wrong !!");
             apiReturnModel.setCount(0);
+
             apiReturnModel.setData(null);
         }
 

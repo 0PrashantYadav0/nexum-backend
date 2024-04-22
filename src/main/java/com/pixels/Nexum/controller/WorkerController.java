@@ -23,7 +23,7 @@ public class WorkerController {
 
 
 
-    @GetMapping("getWorker")
+    @GetMapping("show/getWorker")
     public ResponseEntity<?> getWorker(){
         apiReturnModel = new APIReturnModel();
         workerVec = new Vector<>();
@@ -46,7 +46,7 @@ public class WorkerController {
         return ResponseEntity.ok(apiReturnModel);
     }
 
-    @GetMapping("getWorkerById/{id}")
+    @GetMapping("show/getWorkerById/{id}")
     public ResponseEntity<?> getWorkerById(@PathVariable("id") int id){
         apiReturnModel = new APIReturnModel();
         workerVec = new Vector<>();
@@ -69,7 +69,7 @@ public class WorkerController {
         return ResponseEntity.ok(apiReturnModel);
     }
 
-    @PostMapping("addWorker")
+    @PostMapping("auth/addWorker")
     public ResponseEntity<?> createWorker(@RequestBody WorkerModel workerModel){
         apiReturnModel = new APIReturnModel();
         workerVec = new Vector<>();
@@ -92,7 +92,7 @@ public class WorkerController {
         return ResponseEntity.ok(apiReturnModel);
     }
 
-    @PutMapping("updateWorker")
+    @PutMapping("auth/updateWorker")
     public ResponseEntity<?> updateWorker(@RequestBody WorkerModel workerModel){
         apiReturnModel = new APIReturnModel();
         workerVec = new Vector<>();
@@ -115,7 +115,7 @@ public class WorkerController {
         return ResponseEntity.ok(apiReturnModel);
     }
 
-    @DeleteMapping("deleteWorker/{id}")
+    @DeleteMapping("auth/deleteWorker/{id}")
     public ResponseEntity<?> deleteWorker(@PathVariable("id") int id){
         apiReturnModel = new APIReturnModel();
         workerVec = new Vector<>();
@@ -139,7 +139,7 @@ public class WorkerController {
     }
 
 
-    @GetMapping("getHeroWorker")
+    @GetMapping("show/getHeroWorker")
     public ResponseEntity<?> getHeroWorker(){
         apiReturnModel = new APIReturnModel();
         workerVec = new Vector<>();

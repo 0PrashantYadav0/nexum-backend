@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Vector;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @RequestMapping("/api/message/")
 public class MessageController {
 

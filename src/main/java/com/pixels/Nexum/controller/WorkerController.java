@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Vector;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @RequestMapping("/api/worker/")
 public class WorkerController {
 

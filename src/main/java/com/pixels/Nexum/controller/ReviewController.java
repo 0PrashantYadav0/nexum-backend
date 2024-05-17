@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.Vector;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @RequestMapping("/api/review/")
 public class ReviewController {
 
